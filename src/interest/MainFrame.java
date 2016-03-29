@@ -237,7 +237,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			jlTitle.setText("本息还款计算");
 			initialise();
 			jl1.setText("贷款金额：");
-			jl2.setText("最终收益：");
+			jl2.setText("年利率：");
 			jl3.setText("年限：");
 			jt4False();
 
