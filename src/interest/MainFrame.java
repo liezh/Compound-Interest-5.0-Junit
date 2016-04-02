@@ -35,9 +35,13 @@ public class MainFrame extends JFrame implements ActionListener{
 	
 	int jTextWidth = 130 ;
 	int jTextHeight = 30 ;
+	
+	int moneyUnit = 1;
+	
 	public MainFrame(){
 		frame();
 	}
+	
 	
 	private void frame() {
 		// TODO 自动生成的方法存根
@@ -55,22 +59,31 @@ public class MainFrame extends JFrame implements ActionListener{
 		jp.setBackground(Color.CYAN);
 		jp.setLayout(null);
 		JMenuBar jmb = new JMenuBar();
-		JMenu jm = new JMenu("菜单");
-		JMenuItem jmi = new JMenuItem("单位设置");
-		JMenuItem jmi1 = new JMenuItem("关于");
-		JMenuItem jmi2 = new JMenuItem("单位设置");
-		JMenuItem jmi3 = new JMenuItem("单位设置");
+		JMenu jmMenu = new JMenu("菜单");
+		JMenu jmiUnit = new JMenu("单位设置");
+		JMenuItem jmiWan = new JMenuItem("万元");
+		JMenuItem jmiYuan = new JMenuItem("元");
+		jmiUnit.add(jmiWan);
+		jmiUnit.add(jmiYuan);
+		jmiWan.addActionListener(this);
+		jmiYuan.addActionListener(this);
+		
+		JMenu jmAbout = new JMenu("关于");
+		JMenuItem jmiAuthor = new JMenuItem("作者");
+		jmiAuthor.addActionListener(this);
+		
 		jmb.setVisible(true);
-		jmb.add(jm);
-		jm.add(jmi);
-		jm.add(jmi1);
+		jmb.add(jmMenu);
+		jmb.add(jmAbout);
+		jmMenu.add(jmiUnit);
+		
+		jmAbout.add(jmiAuthor);
 		
 		setJMenuBar(jmb);
+		
 		initJButton(jp);
 		initJText(jp);
 		initJLabel(jp);
-
-		
 	}
 
 	JButton jbSingleInterest ;
@@ -130,6 +143,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		jbClear.addActionListener(this);
 		
 	}
+	
 	JTextField jt1 = new JTextField();
 	JTextField jt2 = new JTextField();
 	JTextField jt3 = new JTextField();
@@ -249,18 +263,23 @@ public class MainFrame extends JFrame implements ActionListener{
 			jl3.setText("年限：");
 			jl4.setText("复利次数：");
 			jt4Ture();
-
+			
 		} else if(a.getActionCommand().equals("Enter")) {
 			if(jt1.getText().trim().equals("") || jt2.getText().trim().equals("") ||jt3.getText().trim().equals("") ){
 				JOptionPane jo = new JOptionPane();
 				jo.showMessageDialog(null,"请输入数值!");
 			}	else {
-				System.out.print("22222222222");
 				interest ();
 			}
-	
 		}else if(a.getActionCommand().equals("Clear")) {
 			initialise();
+		}else if(a.getActionCommand().equals("作者")) {
+			JOptionPane jo = new JOptionPane();
+			jo.showMessageDialog(null,"作者：列志华 \n 完成时间：2016.4.2.14：50 \n 版本号：5.1");
+		}else if(a.getActionCommand().equals("万元")) {
+			moneyUnit = 10000;
+		}else if(a.getActionCommand().equals("元")) {
+			moneyUnit = 1;
 		}
 
 	}
@@ -274,24 +293,54 @@ public class MainFrame extends JFrame implements ActionListener{
 	}
 	
 	private void interest () {
-		System.out.print("234324");
+		final JOptionPane jo = new JOptionPane();
 		if(jlTitle.getText() == "单利计算") {
 			String strPrincipal = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
-//          System.out.print("1111111111111");
 			SingleInterest single = new SingleInterest(strRate, strPrincipal, strTime);
-			double f = single.Interest();
+			double f = single.Interest(new showError() {
+
+				@Override
+				public void scanerError() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有负数!\n 请重新输入！！");
+					initialise();
+				}
+
+				@Override
+				public void havaString() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					initialise();
+					
+				}
+			});
 			jtConsequence.setText(String.valueOf(f));
 		}
 		else if(jlTitle.getText() == "复利计算") {
-			System.out.print("---------");
 			String strPrincipal = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			String strCount = jt4.getText() ;
 			CompoundInterrest compound = new CompoundInterrest(strRate, strPrincipal, strTime,strCount);
-			double f = compound.Interrest();
+			double f = compound.Interrest(new showError() {
+
+				@Override
+				public void scanerError() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有负数!\n 请重新输入！！");
+					initialise();
+				}
+
+				@Override
+				public void havaString() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					initialise();
+				}
+				
+			});
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "投资时间计算") {
@@ -300,34 +349,93 @@ public class MainFrame extends JFrame implements ActionListener{
 			String strEarnings = jt3.getText() ;
 			String strCount = jt4.getText() ;
 			InterestTime time = new InterestTime(strRate, strPrincipal, strEarnings, strCount);
-			int t = time.Interrest();
+			int t = time.Interrest(new showError() {
+
+				@Override
+				public void scanerError() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有负数!\n 请重新输入！！");
+					initialise();
+				}
+
+				@Override
+				public void havaString() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					initialise();
+				}
+				
+			});
 			jtConsequence.setText(String.valueOf(t)+"年");
 		} else if(jlTitle.getText() == "定投计算"){
 			String strInvestment = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			//String strCount = jt4.getText() ;
-			PeriodicIncome compound = new PeriodicIncome(strRate, strInvestment, strTime);
-			double f = compound.Interrest();
+			PeriodicIncome perincome = new PeriodicIncome(strRate, strInvestment, strTime);
+			double f = perincome.Interrest(new showError() {
+				
+				@Override
+				public void scanerError() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有负数!\n 请重新输入！！");
+					initialise();
+				}
+				
+				@Override
+				public void havaString() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					initialise();
+				}
+			});
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "本金估算") {
-			//System.out.print("---------");
 			String strEarnings = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			String strCount = jt4.getText() ;
-			Principal compound = new Principal(strRate, strEarnings, strTime,strCount);
-			double f = compound.Interrest();
+			Principal principal = new Principal(strRate, strEarnings, strTime,strCount);
+			double f = principal.Interrest(new showError() {
+				
+				@Override
+				public void scanerError() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有负数!\n 请重新输入！！");
+					initialise();
+				}
+				
+				@Override
+				public void havaString() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					initialise();
+				}
+			});
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "本息还款计算") {
 			String strLoan = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
-//          System.out.print("1111111111111");
-			Refund single = new Refund(strRate, strLoan, strTime);
-			double f = single.Interrest();
+			Refund refund = new Refund(strRate, strLoan, strTime);
+			double f = refund.Interrest(new showError() {
+				
+				@Override
+				public void scanerError() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有负数!\n 请重新输入！！");
+					initialise();
+				}
+				
+				@Override
+				public void havaString() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					initialise();
+				}
+			});
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "最佳项目计算") {
@@ -335,19 +443,27 @@ public class MainFrame extends JFrame implements ActionListener{
 			String strstrPrincipal = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			String strCount = jt4.getText() ;
-			BestProject compound = new BestProject(strstrPrincipal, strEarnings, strTime,strCount);
-			double f = compound.Interrest();
+			BestProject bestProject = new BestProject(strstrPrincipal, strEarnings, strTime,strCount);
+			double f = bestProject.Interrest(new showError() {
+				
+				@Override
+				public void scanerError() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有负数!\n 请重新输入！！");
+					initialise();
+				}
+				
+				@Override
+				public void havaString() {
+					// TODO 自动生成的方法存根
+					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					initialise();
+				}
+			});
 			jtConsequence.setText(String.valueOf(f));
 			
 		}
 		
 	}
-	
-	
-	
-
-	
-	
-	
 
 }

@@ -2,24 +2,35 @@ package interest;
 
 public class Refund {
 	
-	private double rare ;
-	private double loan ;
-	private int time ;
-	public Refund (String strRare, String strLoan, String strTime) {
-		this.rare = Double.valueOf(strRare);
-		this.loan = Double.valueOf(strLoan);
-		this.time = Integer.valueOf(strTime);
+	private String strRate ;
+	private String strLoan ;
+	private String strTime ;
+	public Refund (String strRate, String strLoan, String strTime) {
+		this.strRate = strRate;
+		this.strLoan = strLoan;
+		this.strTime = strTime;
 	}
 	
-	public double Interrest () {
+	public double Interrest (showError se) {
 		double f = 0 ;
-		if (rare > 0 || loan > 0 || time > 0) {
-			rare = rare/12.0;
-			int month = time*12;
-			f = loan*rare*Math.pow((1.0+rare), month)/(Math.pow(1.0+rare, month)-1);
+		double rate;
+		double loan;
+		int time;
+		try {
+			rate = Double.valueOf(strRate);
+			loan = Double.valueOf(strLoan);
+			time = Integer.valueOf(strTime);
+			if (rate > 0 && loan > 0 && time > 0) {
+				rate = rate/12.0;
+				int month = time*12;
+				f = loan*rate*Math.pow((1.0+rate), month)/(Math.pow(1.0+rate, month)-1);
 
-		} else {
-
+			} else {
+				se.scanerError();
+			}
+		} catch (NumberFormatException e) {
+			// TODO 自动生成的 catch 块
+			se.havaString();
 		}
 		
 		return f ;

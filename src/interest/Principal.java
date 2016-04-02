@@ -1,27 +1,40 @@
 package interest;
 
 public class Principal {
-	private double rare ;
-	private double earnings ;
-	private int time ;
-	private int count ;
+	private String strRate;
+	private String strTime;
+	private String strEarnings;
+	private String strCount;
 	
 	public Principal (String strRare, String strEarnings, String strTime, String strCount) {
-		this.rare = Double.valueOf(strRare);
-		this.earnings = Double.valueOf(strEarnings);
-		this.time = Integer.valueOf(strTime);
-		this.count = Integer.valueOf(strCount);
+		this.strRate = strRare;
+		this.strEarnings = strEarnings;
+		this.strTime = strTime;
+		this.strCount = strCount;
 	}
 	
-	public double Interrest () {
+	public double Interrest (showError se) {
 		double f = 0 ;
-   		if (earnings > 0 || rare > 0 || time > 0 || count > 0) {
-				rare = Math.pow(1+rare/count, count)-1;
-				f = earnings/Math.pow((rare+1), time);
+		double rate;
+		double earnings;
+		int time;
+		int count;
+   		try {
+			rate = Double.valueOf(strRate);
+			earnings = Double.valueOf(strEarnings);
+			time = Integer.valueOf(strTime);
+			count = Integer.valueOf(strCount);
+			if (earnings > 0 && rate > 0 && time > 0 && count > 0) {
+					rate = Math.pow(1+rate/count, count)-1;
+					f = earnings/Math.pow((rate+1), time);
 
-    		} else {
-    			
-    		}
+				} else {
+					se.scanerError();
+				}
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			se.havaString();
+		}
 		return f ;
 	}
 	

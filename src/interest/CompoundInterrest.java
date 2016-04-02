@@ -1,28 +1,42 @@
 package interest;
 
 public class CompoundInterrest {
-	private double rate ;
-	private double principal ;
-	private int time ;
-	private int count ;
-	
-	public CompoundInterrest(String strRate, String strPrincipal, String strTime, String strCount) {
-		this.rate = Double.valueOf(strRate);
-		this.principal = Double.valueOf(strPrincipal);
-		this.time = Integer.valueOf(strTime);
-		this.count = Integer.valueOf(strCount);
+	private String strRate;
+	private String strPrincipal;
+	private String strTime;
+	private String strCount;
+
+	public CompoundInterrest(String strRate, String strPrincipal,
+			String strTime, String strCount) {
+		this.strRate = strRate;
+		this.strPrincipal = strPrincipal;
+		this.strTime = strTime;
+		this.strCount = strCount;
 	}
-	
-	public double Interrest () {
-		double f = 0 ;
-  		if (principal > 0 || rate > 0 || time > 0 || count > 0) {
-				rate = Math.pow(1+rate/count, count)-1;
-				f = principal*Math.pow((rate+1), time);
-    		} else {
-    			
-    		}
-		
+
+	public double Interrest(showError se) {
+		double f = 0;
+		double rate;
+		double principal;
+		int time;
+		int count;
+		try {
+			rate = Double.valueOf(strRate);
+			principal = Double.valueOf(strPrincipal);
+			time = Integer.valueOf(strTime);
+			count = Integer.valueOf(strCount);
+			if (principal > 0 && rate > 0 && time > 0 && count > 0) {
+				rate = Math.pow(1 + rate / count, count) - 1;
+				f = principal * Math.pow((rate + 1), time);
+			} else {
+				se.scanerError();
+			}
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			se.havaString();
+		}
+
 		return f;
 	}
-	
+
 }
