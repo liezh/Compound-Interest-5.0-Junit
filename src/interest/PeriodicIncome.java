@@ -1,11 +1,9 @@
 package interest;
 
-public class PeriodicIncome {
-	private String strRate ;
-	private String strInv ;
-	private String strTime ;
+public class PeriodicIncome extends Function {
 	
-	public PeriodicIncome(String strRate, String strInvestment, String strTime) {
+	public PeriodicIncome(int moneyUnit, String strRate, String strInvestment, String strTime) {
+		this.moneyUnit = moneyUnit;
 		this.strRate = strRate;
 		this.strInv = strInvestment;
 		this.strTime = strTime;
@@ -18,7 +16,7 @@ public class PeriodicIncome {
 		int time ;
   		try {
 			rate = Double.valueOf(strRate);
-			inv = Double.valueOf(strInv);
+			inv = Double.valueOf(strInv) * moneyUnit;
 			time = Integer.valueOf(strTime);
 			if (inv > 0 && rate > 0 && time > 0) {
 				f = inv * (1.0 + rate) * (-1 + Math.pow(1.0 + rate, time)) / rate;

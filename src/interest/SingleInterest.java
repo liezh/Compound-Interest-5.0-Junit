@@ -1,11 +1,9 @@
 package interest;
 
-public class SingleInterest {
-	private String strRate ;
-	private String strPrincipal ;
-	private String strTime ;
+public class SingleInterest extends Function {
 
-	public SingleInterest(String strRate, String strPrincipal, String strTime) {
+	public SingleInterest(int moneyUnit, String strRate, String strPrincipal, String strTime) {
+		this.moneyUnit = moneyUnit;
 		this.strRate = strRate;
 		this.strPrincipal = strPrincipal;
 		this.strTime = strTime;
@@ -18,7 +16,7 @@ public class SingleInterest {
 		int time ;
 		try {
 			rate = Double.valueOf(strRate);
-			principal = Double.valueOf(strPrincipal);
+			principal = Double.valueOf(strPrincipal) * moneyUnit;
 			time = Integer.valueOf(strTime);
 			if(rate > 0 && principal > 0 && time > 0) {
 			double nlx = principal*rate;

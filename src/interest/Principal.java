@@ -1,12 +1,9 @@
 package interest;
 
-public class Principal {
-	private String strRate;
-	private String strTime;
-	private String strEarnings;
-	private String strCount;
-	
-	public Principal (String strRare, String strEarnings, String strTime, String strCount) {
+public class Principal extends Function {
+
+	public Principal (int moneyUnit, String strRare, String strEarnings, String strTime, String strCount) {
+		this.moneyUnit = moneyUnit;
 		this.strRate = strRare;
 		this.strEarnings = strEarnings;
 		this.strTime = strTime;
@@ -21,7 +18,7 @@ public class Principal {
 		int count;
    		try {
 			rate = Double.valueOf(strRate);
-			earnings = Double.valueOf(strEarnings);
+			earnings = Double.valueOf(strEarnings) * moneyUnit;
 			time = Integer.valueOf(strTime);
 			count = Integer.valueOf(strCount);
 			if (earnings > 0 && rate > 0 && time > 0 && count > 0) {

@@ -1,13 +1,10 @@
 package interest;
 
-public class CompoundInterrest {
-	private String strRate;
-	private String strPrincipal;
-	private String strTime;
-	private String strCount;
+public class CompoundInterrest extends Function{
 
-	public CompoundInterrest(String strRate, String strPrincipal,
-			String strTime, String strCount) {
+	public CompoundInterrest(int moneyUnit, String strRate, String strPrincipal,
+	String strTime, String strCount) {
+		this.moneyUnit = moneyUnit;
 		this.strRate = strRate;
 		this.strPrincipal = strPrincipal;
 		this.strTime = strTime;
@@ -22,7 +19,7 @@ public class CompoundInterrest {
 		int count;
 		try {
 			rate = Double.valueOf(strRate);
-			principal = Double.valueOf(strPrincipal);
+			principal = Double.valueOf(strPrincipal) * moneyUnit;
 			time = Integer.valueOf(strTime);
 			count = Integer.valueOf(strCount);
 			if (principal > 0 && rate > 0 && time > 0 && count > 0) {

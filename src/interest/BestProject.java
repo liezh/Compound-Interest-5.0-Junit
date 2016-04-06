@@ -1,12 +1,9 @@
 package interest;
 
-public class BestProject {
+public class BestProject extends Function{
 
-	String strEarnings ;   //最终受益的字符串
-	String strPrincipal ;  //本金的字符串
-	String strTime ;       //年限的字符串
-	String strCount ;      //复利次数
-	public BestProject (String strEarnings, String strPrincipal, String strTime, String strCount) {
+	public BestProject (int moneyUnit , String strEarnings, String strPrincipal, String strTime, String strCount) {
+		this.moneyUnit = moneyUnit;
 		this.strEarnings = strEarnings;
 		this.strPrincipal = strPrincipal;
 		this.strTime = strTime;
@@ -19,8 +16,8 @@ public class BestProject {
 		int time ;
 		int count ;
 		try {
-			earnings = Double.valueOf(strEarnings);
-			principal = Double.valueOf(strPrincipal);
+			earnings = Double.valueOf(strEarnings) * moneyUnit;
+			principal = Double.valueOf(strPrincipal) * moneyUnit;
 			time = Integer.valueOf(strTime);
 			count = Integer.valueOf(strCount);
 			

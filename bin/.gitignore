@@ -1,2 +1,5 @@
-/interest/
-/com/
+/.classpath
+/.project
+/.settings
+/mySQL
+/interest

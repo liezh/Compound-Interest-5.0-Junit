@@ -1,11 +1,10 @@
 package interest;
 
-public class Refund {
-	
-	private String strRate ;
-	private String strLoan ;
-	private String strTime ;
-	public Refund (String strRate, String strLoan, String strTime) {
+public class Refund extends Function {
+
+
+	public Refund (int moneyUnit, String strRate, String strLoan, String strTime) {
+		this.moneyUnit = moneyUnit;
 		this.strRate = strRate;
 		this.strLoan = strLoan;
 		this.strTime = strTime;
@@ -18,7 +17,7 @@ public class Refund {
 		int time;
 		try {
 			rate = Double.valueOf(strRate);
-			loan = Double.valueOf(strLoan);
+			loan = Double.valueOf(strLoan) * moneyUnit;
 			time = Integer.valueOf(strTime);
 			if (rate > 0 && loan > 0 && time > 0) {
 				rate = rate/12.0;

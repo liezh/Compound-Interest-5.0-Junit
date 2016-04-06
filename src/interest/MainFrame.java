@@ -12,6 +12,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import java.awt.Color;
@@ -27,6 +30,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import mySQL.MySQL;
+
 public class MainFrame extends JFrame implements ActionListener{
 	private int h = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private int w = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -37,7 +42,10 @@ public class MainFrame extends JFrame implements ActionListener{
 	int jTextHeight = 30 ;
 	
 	int moneyUnit = 1;
+	String str = "# " ;
+	double[] items = new double[50];
 	
+	int N = 0;
 	public MainFrame(){
 		frame();
 	}
@@ -47,14 +55,13 @@ public class MainFrame extends JFrame implements ActionListener{
 		// TODO 自动生成的方法存根
 		
 		this.setTitle("投资收益计算器");
-		this.setSize(500, 500);
-		this.setLocation((w-500)/2, (h-500)/2);
+		this.setSize(500, 650);
+		this.setLocation((w-500)/2, (h-650)/2);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// this.addMouseListener(this);
 		this.setVisible(true);
-		
-		 
+
 		JPanel jp = new JPanel();
 		jp.setBackground(Color.CYAN);
 		jp.setLayout(null);
@@ -84,8 +91,21 @@ public class MainFrame extends JFrame implements ActionListener{
 		initJButton(jp);
 		initJText(jp);
 		initJLabel(jp);
+		initJTextArea(jp);
 	}
 
+	
+	JTextArea jtaPrint ;
+	private void initJTextArea (JPanel jp) {
+		jtaPrint = new JTextArea();
+
+		jtaPrint.setBounds(40,450,400,100);
+		this.getContentPane().add(jp);
+		jp.add(jtaPrint);
+	}
+	
+	
+	
 	JButton jbSingleInterest ;
 	JButton jbCompoundInterest ;
 	JButton jbInterestTime ;
@@ -95,7 +115,6 @@ public class MainFrame extends JFrame implements ActionListener{
 	JButton jbBestProject ;
 	JButton jbConsequence ;
 	JButton jbClear;
-	
 	private void initJButton (JPanel jp) {
 		int y = 0;
 		int x = 20;
@@ -164,20 +183,21 @@ public class MainFrame extends JFrame implements ActionListener{
 		jp.add(jt3);
 		jp.add(jt4);
 		jp.add(jtConsequence);
-		
 	}
 	
 	JLabel jl1 = new JLabel("	本金：");
-	JLabel jl2 = new JLabel("  年利率：");
+	JLabel jl2 = new JLabel("年利率：");
 	JLabel jl3 = new JLabel("	年限：");
 	JLabel jl4 = new JLabel("复利次数：");
 	JLabel jl5 = new JLabel("	终值：");
-	JLabel jlTitle = new JLabel("复利计算");
+	JLabel jlTitle = new JLabel("复利计算",JLabel.CENTER);
+	JLabel jlUnit = new JLabel("单位：元",JLabel.CENTER);
 	private void initJLabel(JPanel jp) {
 		int x = 240;
 		int y = 60;
 		int add = 40;
-		jlTitle.setBounds(x,y,jTextWidth,jTextHeight);
+		jlUnit.setBounds(x+20,y,jTextWidth,jTextHeight);
+		jlTitle.setBounds(x,y-50,jTextWidth+80,jTextHeight+20);
 		jl1.setBounds(x,y = y+add,jTextWidth,jTextHeight);
 		jl2.setBounds(x,y = y+add,jTextWidth,jTextHeight);
 		jl3.setBounds(x,y = y+add,jTextWidth,jTextHeight);
@@ -189,9 +209,14 @@ public class MainFrame extends JFrame implements ActionListener{
 		jp.add(jl3);
 		jp.add(jl4);
 		jp.add(jl5);
+		jp.add(jlUnit);
+		Font font = new Font("宋体",Font.BOLD,30);
+		jlTitle.setFont(font);
 		
 	}
-
+	/*
+	 * 下面的两个方法就是，设置输入框4是否需要显示。
+	 */
 	private void jt4Ture () {
 		jt4.setVisible(true);
 		jl4.setVisible(true);
@@ -200,12 +225,13 @@ public class MainFrame extends JFrame implements ActionListener{
 		jt4.setVisible(false);
 		jl4.setVisible(false);
 	}
-
+	/*
+	 * 该方法用于检测用户在面板上的操作，是一个事件监听的实现方法。
+	 */
 	public void actionPerformed(ActionEvent a) {
 		// TODO 自动生成的方法存根
 		if(a.getActionCommand().equals("单利计算")) {
 			initialise();
-			
 			jlTitle.setText("单利计算");
 			jl1.setText("本金：");
 			jl2.setText("项目利率：");
@@ -269,7 +295,12 @@ public class MainFrame extends JFrame implements ActionListener{
 				JOptionPane jo = new JOptionPane();
 				jo.showMessageDialog(null,"请输入数值!");
 			}	else {
-				interest ();
+				try {
+					interest ();
+				} catch (Throwable e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
 			}
 		}else if(a.getActionCommand().equals("Clear")) {
 			initialise();
@@ -278,11 +309,17 @@ public class MainFrame extends JFrame implements ActionListener{
 			jo.showMessageDialog(null,"作者：列志华 \n 完成时间：2016.4.2.14：50 \n 版本号：5.1");
 		}else if(a.getActionCommand().equals("万元")) {
 			moneyUnit = 10000;
+			jlUnit.setText("单位：万元");
 		}else if(a.getActionCommand().equals("元")) {
 			moneyUnit = 1;
+			jlUnit.setText("单位：元");
 		}
+		
 
 	}
+	/*
+	 * 该方法用于把输入框重新设空。
+	 */
 	private void initialise(){
 		 jt1.setText(null); 
 		 jt2.setText(null); 
@@ -292,13 +329,18 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 	}
 	
-	private void interest () {
+	/*
+	 * 该方法用于判断用户选择的运算方式，并计算出结果体现在jtConsequence中。
+	 */
+	private void interest () throws Throwable {
 		final JOptionPane jo = new JOptionPane();
+		
+		MySQL sql = new MySQL();
 		if(jlTitle.getText() == "单利计算") {
 			String strPrincipal = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
-			SingleInterest single = new SingleInterest(strRate, strPrincipal, strTime);
+			SingleInterest single = new SingleInterest(moneyUnit,strRate, strPrincipal, strTime);
 			double f = single.Interest(new showError() {
 
 				@Override
@@ -316,6 +358,17 @@ public class MainFrame extends JFrame implements ActionListener{
 					
 				}
 			});
+			try {
+
+				sql.sqlInsertSingle(moneyUnit, strRate, strPrincipal, strTime);
+			} catch (Exception e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				System.out .print("数据库异常！！");
+			}
+			
+			
+			items[N++] = f;
 			jtConsequence.setText(String.valueOf(f));
 		}
 		else if(jlTitle.getText() == "复利计算") {
@@ -323,7 +376,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			String strCount = jt4.getText() ;
-			CompoundInterrest compound = new CompoundInterrest(strRate, strPrincipal, strTime,strCount);
+			CompoundInterrest compound = new CompoundInterrest(moneyUnit, strRate, strPrincipal, strTime,strCount);
 			double f = compound.Interrest(new showError() {
 
 				@Override
@@ -341,6 +394,14 @@ public class MainFrame extends JFrame implements ActionListener{
 				}
 				
 			});
+			try {
+				sql.sqlInsertCompound(moneyUnit, strRate, strPrincipal, strTime, strCount);
+			} catch (Exception e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				System.out .print("数据库异常！！");
+			}
+			items[N++] = f;
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "投资时间计算") {
@@ -348,8 +409,8 @@ public class MainFrame extends JFrame implements ActionListener{
 			String strRate = jt2.getText() ;
 			String strEarnings = jt3.getText() ;
 			String strCount = jt4.getText() ;
-			InterestTime time = new InterestTime(strRate, strPrincipal, strEarnings, strCount);
-			int t = time.Interrest(new showError() {
+			InterestTime time = new InterestTime(moneyUnit, strRate, strPrincipal, strEarnings, strCount);
+			double t = time.Interrest(new showError() {
 
 				@Override
 				public void scanerError() {
@@ -366,13 +427,21 @@ public class MainFrame extends JFrame implements ActionListener{
 				}
 				
 			});
+			try {
+				sql.sqlInsertTime(moneyUnit, strRate, strPrincipal, strEarnings, strCount);
+			} catch (Exception e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				System.out .print("数据库异常！！");
+			}
+			items[N++] = t;
 			jtConsequence.setText(String.valueOf(t)+"年");
 		} else if(jlTitle.getText() == "定投计算"){
 			String strInvestment = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			//String strCount = jt4.getText() ;
-			PeriodicIncome perincome = new PeriodicIncome(strRate, strInvestment, strTime);
+			PeriodicIncome perincome = new PeriodicIncome(moneyUnit, strRate, strInvestment, strTime);
 			double f = perincome.Interrest(new showError() {
 				
 				@Override
@@ -389,6 +458,14 @@ public class MainFrame extends JFrame implements ActionListener{
 					initialise();
 				}
 			});
+			try {
+				sql.sqlInsertPerincome(moneyUnit, strRate, strInvestment, strTime);
+			} catch (Exception e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				System.out .print("数据库异常！！");
+			}
+			items[N++] = f;
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "本金估算") {
@@ -396,7 +473,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			String strCount = jt4.getText() ;
-			Principal principal = new Principal(strRate, strEarnings, strTime,strCount);
+			Principal principal = new Principal(moneyUnit, strRate, strEarnings, strTime,strCount);
 			double f = principal.Interrest(new showError() {
 				
 				@Override
@@ -413,13 +490,21 @@ public class MainFrame extends JFrame implements ActionListener{
 					initialise();
 				}
 			});
+			try {
+				sql.sqlInsertPrincipal(moneyUnit, strRate, strEarnings, strTime, strCount);
+			} catch (Exception e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				System.out .print("数据库异常！！");
+			}
+			items[N++] = f;
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "本息还款计算") {
 			String strLoan = jt1.getText() ;
 			String strRate = jt2.getText() ;
 			String strTime = jt3.getText() ;
-			Refund refund = new Refund(strRate, strLoan, strTime);
+			Refund refund = new Refund(moneyUnit, strRate, strLoan, strTime);
 			double f = refund.Interrest(new showError() {
 				
 				@Override
@@ -436,14 +521,23 @@ public class MainFrame extends JFrame implements ActionListener{
 					initialise();
 				}
 			});
+			try {
+
+				sql.sqlInsertRefund(moneyUnit, strRate, strLoan, strTime);
+			} catch (Exception e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				System.out .print("数据库异常！！");
+			}
+			items[N++] = f;
 			jtConsequence.setText(String.valueOf(f));
 			
 		} else if(jlTitle.getText() == "最佳项目计算") {
 			String strEarnings = jt1.getText() ;
-			String strstrPrincipal = jt2.getText() ;
+			String strPrincipal = jt2.getText() ;
 			String strTime = jt3.getText() ;
 			String strCount = jt4.getText() ;
-			BestProject bestProject = new BestProject(strstrPrincipal, strEarnings, strTime,strCount);
+			BestProject bestProject = new BestProject(moneyUnit, strPrincipal, strEarnings, strTime,strCount);
 			double f = bestProject.Interrest(new showError() {
 				
 				@Override
@@ -456,14 +550,30 @@ public class MainFrame extends JFrame implements ActionListener{
 				@Override
 				public void havaString() {
 					// TODO 自动生成的方法存根
-					jo.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
+					JOptionPane.showMessageDialog(null,"输入有字符!\n 请重新输入！！");
 					initialise();
 				}
 			});
+			try {
+				
+				sql.sqlInsertBestProject(moneyUnit, strEarnings, strPrincipal, strTime, strCount);
+			} catch (Exception e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				System.out .print("数据库异常！！");
+			}
+			items[N++] = f;
 			jtConsequence.setText(String.valueOf(f));
 			
 		}
-		
+		double d = 0;
+		for(int i =0 ; i<N ; i++){
+			System.out.print(items[i]);
+			d += items[i];
+		}
+		String strSum = "总收益=" + String.valueOf(d);
+		str += ("	项目"+ String.valueOf(N) + ':' + String.valueOf(items[N-1]) + '\n');
+		jtaPrint.setText(str + strSum);
 	}
 
 }

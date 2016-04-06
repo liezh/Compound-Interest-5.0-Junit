@@ -9,7 +9,7 @@ public class Function {
 	String strCount ;      //复利次数的字符串
 	String strRate;        //年利率的字符串
 	String strInv ;        //每月定投金额的字符串
-	
+	String strLoan;
 	/*
 	 * 用于提供给各子类，用于计算。
 	 * 但是具体计算的公式与方法需要个子类重写。
