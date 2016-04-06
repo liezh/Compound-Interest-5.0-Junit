@@ -37,12 +37,6 @@ public class MySQL {
 	        	System.out.println(rs.getString("principal"));
 	        }
 	       
-//	        String sql1 = "insert into test(items) values ('intem_3')" ;       
-//	        stmt.executeUpdate(sql1);
-	       
-//	        rs.close();
-//	        stmt.close();
-//	        conn.close();
 	    }
 	    
 	    
